@@ -21,7 +21,7 @@ import static repository.SWAPIPeopleRepository.MAPPER;
 public class SWAPIPlanetRepository implements SWPlanetRepository{
     public static final ObjectMapper MAPPER = new ObjectMapper();
     private static final HttpClient client = HttpClient.newHttpClient();
-    public static final String SWAPI_DEV_API_PLANETS = "https://swapi.dev/api/planets";
+    public static final String SWAPI_DEV_API_PLANETS = "https://swapi.dev/api/planets/";
     private Map<Integer, Planet> cache = new HashMap<>();
     @Override
     public List<Planet> findAll() {
