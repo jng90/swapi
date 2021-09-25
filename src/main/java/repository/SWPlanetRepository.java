@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface SWPlanetRepository {
     List<Planet> findAll();
-    Optional<Planet> findById (int id);
+
+    Optional<Planet> findById(int id);
 }

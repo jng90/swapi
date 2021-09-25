@@ -23,13 +23,14 @@ public class CommandLineSWAPIApp {
     public static final SWPlanetService planetService = new SWAPIPlanetService(planetRepository);
 
 
-    public static void menu(){
+    public static void menu() {
         System.out.println("1) - Szukaj osoby: ");
         System.out.println("2) - Szukaj planety: ");
         System.out.println("0) - Koniec: ");
     }
-    public static void executeOption(int option){
-        switch (option){
+
+    public static void executeOption(int option) {
+        switch (option) {
             case 1:
                 findPerson();
                 break;
@@ -43,7 +44,8 @@ public class CommandLineSWAPIApp {
                 System.out.println("Nieprawidlowy numer opcji!");
         }
     }
-    public static void findPerson(){
+
+    public static void findPerson() {
         System.out.println("Podaj id osoby: ");
         int id = scanner.nextInt();
         Optional<Person> person = peopleService.findById(id);
@@ -54,7 +56,8 @@ public class CommandLineSWAPIApp {
         }
         scanner.nextLine();
     }
-    public static void findPlanet(){
+
+    public static void findPlanet() {
         System.out.println("Podaj id planety: ");
         int id = scanner.nextInt();
         Optional<Planet> planet = planetService.findById(id);

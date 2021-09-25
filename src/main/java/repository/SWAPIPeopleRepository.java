@@ -15,10 +15,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class SWAPIPeopleRepository implements SWPeopleRepository{
+public class SWAPIPeopleRepository implements SWPeopleRepository {
     public static final ObjectMapper MAPPER = new ObjectMapper();
     private static final HttpClient client = HttpClient.newHttpClient();
     public static final String SWAPI_DEV_API_PEOPLE = "https://swapi.dev/api/people/";
+
     @Override
     public List<Person> findAll() {
         return null;
@@ -39,14 +40,15 @@ public class SWAPIPeopleRepository implements SWPeopleRepository{
 //            }
 //            return Optional.empty();
 //        }
-        if (cache.containsKey(id)){
+        if (cache.containsKey(id)) {
             return Optional.of(cache.get(id));
-        } else{
+        } else {
             try {
                 getObjectFromApi(SWAPI_DEV_API_PEOPLE + id, id, body -> {
                     try {
                         Person person = MAPPER.readValue(body, Person.class);
                         cache.put(id, person);
+                        System.out.println("Szukana osoba jest juz dostepna, wybierz ponownie: ");
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
@@ -57,28 +59,30 @@ public class SWAPIPeopleRepository implements SWPeopleRepository{
             return Optional.empty();
         }
     }
-    private void getPersonFromApi(String url, int id) throws URISyntaxException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI(url))
-                .GET()
-                .build();
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                .whenCompleteAsync((response, exeption) -> {
-                    if (exeption != null){
-                        System.err.println("Problem z odpowiedzią z serwera!");
-                    }
-                    String json = response.body();
-                    ObjectMapper mapper = new ObjectMapper();
-                    try {
+        //pobieranie tylko person
+//    private void getPersonFromApi(String url, int id) throws URISyntaxException {
+//        HttpRequest request = HttpRequest.newBuilder()
+//                .uri(new URI(url))
+//                .GET()
+//                .build();
+//        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+//                .whenCompleteAsync((response, exeption) -> {
+//                    if (exeption != null) {
+//                        System.err.println("Problem z odpowiedzią z serwera!");
+//                    }
+//                    String json = response.body();
+//                    ObjectMapper mapper = new ObjectMapper();
+//                    try {
+//
+//                        Person person = mapper.readValue(json, Person.class);
+//                        cache.put(id, person);
+//                    } catch (JsonProcessingException e) {
+//                        System.err.println("Problem z parsowanie JSON!");
+//                        System.err.println(e.getMessage());
+//                    }
+//                });
+//    }
 
-                        Person person = mapper.readValue(json, Person.class);
-                        cache.put(id, person);
-                    } catch (JsonProcessingException e) {
-                        System.err.println("Problem z parsowanie JSON!");
-                        System.err.println(e.getMessage());
-                    }
-                });
-    }
     private void getObjectFromApi(String url, int id, Consumer<String> consumer) throws URISyntaxException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(url))
@@ -86,7 +90,7 @@ public class SWAPIPeopleRepository implements SWPeopleRepository{
                 .build();
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .whenCompleteAsync((response, exeption) -> {
-                    if (exeption != null){
+                    if (exeption != null) {
                         System.err.println("Problem z odpowiedzią z serwera!");
                     }
                     consumer.accept(response.body());
