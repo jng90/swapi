@@ -1,45 +1,48 @@
 package repository;
 
+import api.ApiHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Person;
+import model.Persons;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class SWAPIPeopleRepository implements SWPeopleRepository {
     public static final ObjectMapper MAPPER = new ObjectMapper();
     private static final HttpClient client = HttpClient.newHttpClient();
     public static final String SWAPI_DEV_API_PEOPLE = "https://swapi.dev/api/people/";
+    private Map<Integer, Person> cache = new HashMap<>();
+    private List<Person> personsList = new ArrayList<>();
 
     @Override
     public List<Person> findAll() {
-        return null;
-    }
-
-    private Map<Integer, Person> cache = new HashMap<>();
+        if (personsList.isEmpty()) {
+            try {
+                ApiHelper.getObjectFromApi(SWAPI_DEV_API_PEOPLE, 0, body -> {
+                    try {
+                        Persons persons = MAPPER.readValue(body, Persons.class);
+                        personsList.addAll(persons.getResults());
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (URISyntaxException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+            return personsList;
+        }
 
     @Override
     public Optional<Person> findById(int id) {
-//        if (cache.containsKey(id)){
-//            return Optional.of(cache.get(id));
-//        }
-//        else {
-//            try {
-//                getPersonFromApi(SWAPI_DEV_API_PEOPLE + id, id);
-//            } catch (URISyntaxException e) {
-//                System.err.println(e.getMessage());
-//            }
-//            return Optional.empty();
-//        }
+
         if (cache.containsKey(id)) {
             return Optional.of(cache.get(id));
         } else {
@@ -59,7 +62,7 @@ public class SWAPIPeopleRepository implements SWPeopleRepository {
             return Optional.empty();
         }
     }
-        //pobieranie tylko person
+    //pobieranie tylko person
 //    private void getPersonFromApi(String url, int id) throws URISyntaxException {
 //        HttpRequest request = HttpRequest.newBuilder()
 //                .uri(new URI(url))

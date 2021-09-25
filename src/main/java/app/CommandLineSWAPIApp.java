@@ -26,6 +26,7 @@ public class CommandLineSWAPIApp {
     public static void menu() {
         System.out.println("1) - Szukaj osoby: ");
         System.out.println("2) - Szukaj planety: ");
+        System.out.println("3) - Wyswietl wszystkie osoby: ");
         System.out.println("0) - Koniec: ");
     }
 
@@ -37,12 +38,20 @@ public class CommandLineSWAPIApp {
             case 2:
                 findPlanet();
                 break;
+            case 3:
+                findPeople();
+                break;
             case 0:
                 System.exit(0);
                 break;
             default:
                 System.out.println("Nieprawidlowy numer opcji!");
         }
+    }
+
+
+    public static void findPeople(){
+        System.out.println(peopleRepository.findAll());
     }
 
     public static void findPerson() {
