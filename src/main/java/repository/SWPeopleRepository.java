@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface SWPeopleRepository {
     List<Person> findAll();
+
     Optional<Person> findById(int id);
 }

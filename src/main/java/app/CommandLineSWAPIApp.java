@@ -11,6 +11,7 @@ import service.SWAPIPlanetService;
 import service.SWPeopleService;
 import service.SWPlanetService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -27,6 +28,8 @@ public class CommandLineSWAPIApp {
         System.out.println("1) - Szukaj osoby: ");
         System.out.println("2) - Szukaj planety: ");
         System.out.println("3) - Wyswietl wszystkie osoby: ");
+        System.out.println("4) - Wyszukaj osoby wg koloru wlosow: ");
+        System.out.println("5) - Ilosc filmow z postacia: ");
         System.out.println("0) - Koniec: ");
     }
 
@@ -41,6 +44,12 @@ public class CommandLineSWAPIApp {
             case 3:
                 findPeople();
                 break;
+            case 4:
+                findByHairColor();
+                break;
+            case 5:
+                countFilmsForPerson();
+                break;
             case 0:
                 System.exit(0);
                 break;
@@ -49,9 +58,24 @@ public class CommandLineSWAPIApp {
         }
     }
 
+    public static void countFilmsForPerson() {
+        System.out.println("Podaj id osoby: ");
+        int id = scanner.nextInt();
+        int count = peopleService.countFilmsByPersonID(id);
+        System.out.println("Znaleziona ilosc filmow dla tej postaci: " + count);
+    }
 
-    public static void findPeople(){
+    public static void findPeople() {
         System.out.println(peopleRepository.findAll());
+    }
+
+    public static void findByHairColor() {
+        System.out.println("Wpisz kolor wlosow: ");
+        String hairColor = scanner.next();
+        scanner.nextLine();
+        List<Person> people = peopleService.findByHairColor(hairColor);
+        System.out.println("Lista osob o podanym kolorze wlosow: ");
+        System.out.println(people);
     }
 
     public static void findPerson() {
